@@ -50,6 +50,7 @@ expect:
         postmortem:
           data:
             decision: needs_more_evidence
+            status: needs_more_evidence
             publish_proposal: null
             publish_performed: false
             publish_result: null

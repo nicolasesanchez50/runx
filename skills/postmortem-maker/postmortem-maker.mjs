@@ -118,6 +118,7 @@ export function finalizePostmortem(inputs) {
     postmortem: {
       schema: "runx.postmortem.v1",
       decision,
+      status: decision,
       reason,
       summary: failed ? null : stringValue(draft.summary),
       timeline: failed ? [] : validTimeline,

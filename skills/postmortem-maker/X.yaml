@@ -125,11 +125,12 @@ runners:
               postmortem:
                 type: object
                 schema:
-                  required: [schema, decision, reason, summary, timeline, impact, root_cause, unknowns, action_items, publish_proposal, publish_performed, publish_result, fragments_digest, validation]
+                  required: [schema, decision, status, reason, summary, timeline, impact, root_cause, unknowns, action_items, publish_proposal, publish_performed, publish_result, fragments_digest, validation]
                   additionalProperties: false
                   properties:
                     schema: { const: runx.postmortem.v1 }
                     decision: { type: string, enum: [publishable, needs_more_evidence, refused] }
+                    status: { type: string, enum: [publishable, needs_more_evidence, refused] }
                     reason: { type: string, minLength: 1, maxLength: 2000 }
                     summary: { type: [string, "null"], maxLength: 8000 }
                     timeline:

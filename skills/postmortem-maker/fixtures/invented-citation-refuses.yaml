@@ -46,6 +46,7 @@ expect:
         postmortem:
           data:
             decision: refused
+            status: refused
             timeline: []
             publish_proposal: null
             publish_performed: false
