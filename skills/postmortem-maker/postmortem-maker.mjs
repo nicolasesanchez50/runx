@@ -14,8 +14,7 @@ export function buildFragments(fields) {
     stringValue(fields.incident_source) ??
     "incident-source";
   const normalized = text.replace(/\s+/g, " ").trim();
-  let units = normalized
-    .split(/(?<=[.!?])\s+/)
+  let units = splitSentences(normalized)
     .map((unit) => unit.trim())
     .filter(Boolean)
     .flatMap((unit) => (unit.length > 1200 ? splitLong(unit) : [unit]));
@@ -33,9 +32,30 @@ export function buildFragments(fields) {
   };
 }
 
+// Plain scanner: the runtime's deterministic worker runs Boa, whose regex
+// engine does not support lookbehind, so sentence boundaries are found by
+// hand. A boundary is [.!?] followed by whitespace or end of input, which
+// keeps dotted identifiers (2026.10.05.1, 06:59:45.034Z) inside one unit.
+function splitSentences(normalized) {
+  const out = [];
+  let start = 0;
+  for (let i = 0; i < normalized.length; i += 1) {
+    const ch = normalized.charAt(i);
+    if (ch !== "." && ch !== "!" && ch !== "?") continue;
+    const next = i + 1 < normalized.length ? normalized.charAt(i + 1) : "";
+    if (next && next !== " ") continue;
+    const chunk = normalized.slice(start, i + 1).trim();
+    if (chunk) out.push(chunk);
+    start = i + 1;
+  }
+  const tail = normalized.slice(start).trim();
+  if (tail) out.push(tail);
+  return out;
+}
+
 function splitLong(unit) {
   return unit
-    .split(/;\s+/)
+    .split(";")
     .map((part) => part.trim())
     .filter(Boolean);
 }
